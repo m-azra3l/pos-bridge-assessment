@@ -3,8 +3,6 @@ node_modules
 *lock
 .env
 /backup
-/artifacts
-/cache
 contractAddress.js
 pinataUrl.js
 nfts.js
