@@ -3,9 +3,3 @@ node_modules
 *lock
 .env
 /backup
-contractAddress.js
-pinataUrl.js
-nfts.js
-mintedNFTs.json
-/metadata/nftcollection
-/metadata/prompt
