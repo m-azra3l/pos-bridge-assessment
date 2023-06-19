@@ -1,0 +1,2 @@
+export const promptUrl = 'https://gateway.pinata.cloud/ipfs/QmZF5S33oXteEZi5RpsQipt2UdmZ6YmENx32p6kTLaQpXR'
+export const collectionUrl = 'https://gateway.pinata.cloud/ipfs/Qmbq6gMuAsi6YfuZ4DVa91zEMuNpWXHYG4AWAgP8zm9S2F'

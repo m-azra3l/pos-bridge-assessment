@@ -37,7 +37,7 @@ contract UhanmiNFTs is ERC721URIStorage {
 
         // Limit the gas used for this transaction to 100,000
         // You can adjust this value based on your needs
-        uint256 gasLimit = 100000;
+        uint256 gasLimit = 1000000;
         require(gasleft() >= gasLimit, "Gas limit reached");
 
         return newTokenId;
