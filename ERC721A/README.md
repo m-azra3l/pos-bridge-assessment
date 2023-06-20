@@ -67,3 +67,4 @@ yarn hardhat run scripts/viewPrompt.js
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+You can make a copy of the project to use for your own purposes.
