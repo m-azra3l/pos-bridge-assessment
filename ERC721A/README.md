@@ -2,10 +2,6 @@
 
 This is the first project in Polygon-Advance, in this project I was tasked deploy an NFT collection on the Ethereum blockchain, Map the collection to Polygon, and Transfer assets over via the Polygon Bridge.
 
-## Description
-
-This program is a simple contract written in Solidity, a programming language used for developing smart contracts on the Ethereum blockchain. The contract has a single function that returns the string "Hello World!". This program serves as a simple and straightforward introduction to Solidity programming, and can be used as a stepping stone for more complex projects in the future.
-
 ## Getting Started
 
 ### Executing program
