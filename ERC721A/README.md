@@ -1,6 +1,6 @@
-# Hello World
+# Polygon-Advanced-Module-1
 
-This Solidity program is a simple "Hello World" program that demonstrates the basic syntax and functionality of the Solidity programming language. The purpose of this program is to serve as a starting point for those who are new to Solidity and want to get a feel for how it works.
+This is the first project in Polygon-Advance, in this project I was tasked deploy an NFT collection on the Ethereum blockchain, Map the collection to Polygon, and Transfer assets over via the Polygon Bridge.
 
 ## Description
 
@@ -10,33 +10,60 @@ This program is a simple contract written in Solidity, a programming language us
 
 ### Executing program
 
-To run this program, you can use Remix, an online Solidity IDE. To get started, go to the Remix website at https://remix.ethereum.org/.
+Download the codes by downloading the entire repository which will give you access to other contencts of the repository. Navigate to the ERC721A project directory,  run:
 
-Once you are on the Remix website, create a new file by clicking on the "+" icon in the left-hand sidebar. Save the file with a .sol extension (e.g., HelloWorld.sol). Copy and paste the following code into the file:
+```shell
 
-```javascript
-pragma solidity ^0.8.4;
-
-contract HelloWorld {
-    function sayHello() public pure returns (string memory) {
-        return "Hello World!";
-    }
-}
+ yarn install
 
 ```
 
-To compile the code, click on the "Solidity Compiler" tab in the left-hand sidebar. Make sure the "Compiler" option is set to "0.8.4" (or another compatible version), and then click on the "Compile HelloWorld.sol" button.
+After installing the dependences, run the test file by using the following command:
 
-Once the code is compiled, you can deploy the contract by clicking on the "Deploy & Run Transactions" tab in the left-hand sidebar. Select the "HelloWorld" contract from the dropdown menu, and then click on the "Deploy" button.
+```shell
+yarn hardhat test
+```
 
-Once the contract is deployed, you can interact with it by calling the sayHello function. Click on the "HelloWorld" contract in the left-hand sidebar, and then click on the "sayHello" function. Finally, click on the "transact" button to execute the function and retrieve the "Hello World!" message.
+### Deploying the ERC721A Contract
+
+Before deploying, make sure to rename ".env.example" to ".env" and provide your wallet private key where required i.e "PRIVATE_KEY= 'your wallet private key'". Run the following command to deploy the ERC721A contract to the Goerli Ethereum Testnet:
+
+``` shell
+npx hardhat run scripts/deploy.js --network goerli 
+```
+
+The script will deploy the contract and provide the address of the contract in the console and also in the "contractAddress.js" file in the metadata folder.
+
+### Batch Mint NFTs
+
+Run the following command to batch mint NFTs using the deployed ERC721 contract:
+
+``` shell
+npx hardhat run scripts/batchMint.js --network goerli
+```
+
+The script will mint the specified number of NFTs and assign them to your address.
+
+### Approve and Deposit NFTs to Polygon Mumbai
+
+Run the following commands to approve and deposit the minted NFTs from Ethereum to the Polygon Mumbai network using the FxPortal Bridge:
+
+```shell
+yarn hardhat run scripts/approveDeposit.js --network goerli
+```
+
+### Viewing the Prompt
+
+To view the prompt for generating the images of the NFTs, run:
+
+```shell
+yarn hardhat run scripts/viewPrompt.js
+```
 
 ## Author
 
-Metacrafter Chris  
-[@metacraftersio](https://twitter.com/metacraftersio)
-
+[Michael](https://github.com/m-azra3l)
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details
+This project is licensed under the [MIT License](LICENSE).
