@@ -1,64 +1,63 @@
-const { ethers } = require('hardhat');
-const ABI = require('../artifacts/contracts/UhanmiNFTs.sol/UhanmiNFTs.json');
+// Import necessary packages and contracts
+const { ethers } = require("hardhat");
 const { FXRootContractAbi } = require('../artifacts/FXRootContractAbi.js');
+const ABI = require('../artifacts/contracts/Uhanmi.sol/UhanmiNFT.json');
 require('dotenv').config();
 
+//Transfer ERC721A tokens to the Ethereum FxChain network
 async function main() {
-  const contractAddress = '0xD8F6847fD533A93eeCD470de80685665bDca8c06';
-  const contractABI = ABI.abi;
+
+  // Set up connections to network and wallet
   const networkAddress = 'https://ethereum-goerli.publicnode.com';
   const privateKey = process.env.PRIVATE_KEY;
-
   const provider = new ethers.providers.JsonRpcProvider(networkAddress);
+
+  // Create a wallet instance
   const wallet = new ethers.Wallet(privateKey, provider);
-  const contract = new ethers.Contract(contractAddress, contractABI, wallet); 
-  const signer = await ethers.getSigner();
 
-  const tokenIds = [1, 2, 3, 4, 5];
+  // Get the signer instance
+  const [signer] = await ethers.getSigners();
 
-  // const bridgeAddress = '0x823eF03B39C339337E451d82cEC57f31316de15F';
-  const bridgeAddress = '0xF9bc4a80464E48369303196645e876c8C7D972de';
-  const bridgeABI = FXRootContractAbi;
-  const bridge = new ethers.Contract(bridgeAddress, bridgeABI, provider);
+  // Get ERC721A contract instance
+  const NFT = await ethers.getContractFactory("UhanmiNFT");
+  const nft = await NFT.attach('0x212d5F48f982608365182cf038C5130952ec69c9');
 
-  const approvePromises = [];
+  // Get FXRoot contract instance
+  const fxRootAddress = '0xF9bc4a80464E48369303196645e876c8C7D972de';
+  const fxRoot = await ethers.getContractAt(FXRootContractAbi, fxRootAddress);
 
-  for (let i = 0; i < tokenIds.length; i++) {
-    const tokenId = tokenIds[i];
-    const tx = await contract.connect(signer).approve(bridge.address, tokenId);
-    approvePromises.push(tx.wait());
-		console.log('Token #' + tokenId + ' approved');
-  }
+  // TokenIds to transfer
+  const tokenIds = [0, 1, 2, 3, 4]; 
 
-  await Promise.all(approvePromises);
+  // Approve the nfts for transfer
+  const approveTx = await nft.connect(signer).setApprovalForAll(fxRootAddress, true);
+  await approveTx.wait();
+  console.log('Approval confirmed');
 
-  const depositPromises = [];
-
-  for (let i = 0; i < tokenIds.length; i++) {
-    const tokenId = tokenIds[i];
-    const tx = await bridge.connect(signer)
-      .deposit(contract.address,
+  // Deposit the nfts to the FXRoot contracts
+  for (let i = 0; i < tokenIds; i++) {
+    const depositTx = await fxRoot.connect(signer).deposit(
+      nft.address,
       wallet.address, 
-      tokenId, 
+      tokenIds[i],
       '0x6566'
     );
-    depositPromises.push(tx.wait());
-    
-		console.log('Token #' + tokenId + ' deposited');
+
+    // Wait for the deposit to be confirmed
+    await depositTx.wait();
   }
 
-  await Promise.all(depositPromises);
+  console.log("Approved and deposited");
 
-  const mumbaiProvider = new ethers.providers.JsonRpcProvider('https://rpc-mumbai.maticvigil.com');
-  const mumbaiContract = new ethers.Contract(contractAddress, contractABI, mumbaiProvider);
+  // Test balanceOf
+  const balance = await nft.balanceOf(wallet.address);
 
-  for (let i = 0; i < tokenIds.length; i++) {
-    const tokenId = tokenIds[i];
-    const balance = await mumbaiContract.balanceOf(wallet.address);
-    console.log(`Balance of token ${tokenId} on Mumbai: ${balance.toString()}`);
-  }
+  // Print the balance of the wallet
+  console.log("UhanmiNFT balance of", wallet.address, "is: ", balance.toString());
 }
 
+
+// Call the main function and handle any errors
 main()
   .then(() => process.exit(0))
   .catch((error) => {

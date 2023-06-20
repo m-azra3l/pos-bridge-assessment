@@ -9,7 +9,7 @@ const fs = require('fs');
 
 async function main() {
   // Get the contract factory
-  const NFT = await hre.ethers.getContractFactory("UhanmiNFTs");
+  const NFT = await hre.ethers.getContractFactory("UhanmiNFT");
 
   // Deploy the contract
   const nft = await NFT.deploy();

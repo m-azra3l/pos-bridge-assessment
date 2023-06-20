@@ -1,60 +1,39 @@
+// This script batch mints Uhanmi ERC721A tokens.
+
+// Import required libraries
 const { ethers } = require("hardhat");
-const fs = require("fs");
-const ABI = require("../artifacts/contracts/UhanmiNFTs.sol/UhanmiNFTs.json");
 require("dotenv").config();
-const path = require('path');
 
 async function main() {
-  const contractAddress = "0xD8F6847fD533A93eeCD470de80685665bDca8c06";
-  const contractABI = ABI.abi;
-  const networkAddress = "https://ethereum-goerli.publicnode.com";
+  // Get private key from env
   const privateKey = process.env.PRIVATE_KEY;
 
+  // The URL of the network provider
+  const networkAddress = "https://ethereum-goerli.publicnode.com";
+
+  // Create a provider using the URL
   const provider = new ethers.providers.JsonRpcProvider(networkAddress);
-  const wallet = new ethers.Wallet(privateKey, provider);
-  const contract = new ethers.Contract(contractAddress, contractABI, wallet);
 
-  const tokenURIs = [
-    "https://gateway.pinata.cloud/ipfs/QmV7p5wUDpc8iADNWZdQv74qAYatJfnP4e4ZAUBWtaLSeL?filename=UhanmiV1",
-    "https://gateway.pinata.cloud/ipfs/QmZPjiZgmZR59zkE6gq3kgG9jUTkByU46zt8h9mnT2vZ14?filename=UhanmiV2",
-    "https://gateway.pinata.cloud/ipfs/QmYei51cEs9z2QVRNUtCcJHixUptj7EaRstpMAtYpoEfJL?filename=UhanmiV3",
-    "https://gateway.pinata.cloud/ipfs/QmRaT3GXTZGAYifmqMGNJj8rJRBPWSfo1VwXbnxdsywL3j?filename=UhanmiV4",
-    "https://gateway.pinata.cloud/ipfs/QmU2iZdTfUV6pVQPWRcuCw1uuSNmGYMhSsCGGsWPVPEiwD?filename=UhanmiV5"
-  ];
+  // Create a signer from the private key and provider
+  const signer = new ethers.Wallet(privateKey, provider);
 
-  const promises = [];
+  // Tthe address of the deployed contract
+  const contractAddress = "0x212d5F48f982608365182cf038C5130952ec69c9";
 
-  for (let i = 0; i < tokenURIs.length; i++) {
-    promises.push(contract.mint(tokenURIs[i]));
-  }
+  // Get the contract factory and attach it to the signer
+  const UhanmiNFT = await ethers.getContractFactory("UhanmiNFT", signer);
+  const contract = await UhanmiNFT.attach(contractAddress);
 
-  const results = await Promise.all(promises);
+  // Call the mint function on the contract to mint 5 tokens
+  await contract.mint(5);
 
-  const tokenData = [];
-
-  for (let i = 0; i < results.length; i++) {
-    const tokenId = results[i].toString();
-    const tokenURI = await contract.tokenURI(tokenId);
-
-    const data = {
-      id: tokenId,
-      uri: tokenURI
-    };
-
-    tokenData.push(data);
-  }
-
-  fs.writeFileSync(
-    'metadata/mintedNFTs.json',
-    JSON.stringify(tokenData)
-  );
-
-  console.log("All NFTs minted successfully and saved to nfts.json!");
+  // Log a message to the console to indicate that the tokens have been minted
+  console.log("Minted 5 tokens");
 }
 
 main()
   .then(() => process.exit(0))
-  .catch((error) => {
+  .catch(error => {
     console.error(error);
     process.exit(1);
-});
+  });
