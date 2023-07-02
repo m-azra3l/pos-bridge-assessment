@@ -3,7 +3,7 @@
 // Import required libraries
 const fetch = require('node-fetch');
 const { ethers } = require("hardhat");
-const ABI = require("../artifacts/contracts/UhanmiNFT.sol/UhanmiNFT.json");
+const ABI = require("../artifacts/contracts/Uhanmi.sol/UhanmiNFT.json");
 
 // Define the main function
 async function main() {

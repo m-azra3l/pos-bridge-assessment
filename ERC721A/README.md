@@ -25,7 +25,7 @@ yarn hardhat test
 Before deploying, make sure to rename ".env.example" to ".env" and provide your wallet private key where required i.e "PRIVATE_KEY= 'your wallet private key'". Run the following command to deploy the ERC721A contract to the Goerli Ethereum Testnet:
 
 ``` shell
-npx hardhat run scripts/deploy.js --network goerli 
+yarn hardhat run scripts/deploy.js --network goerli 
 ```
 
 The script will deploy the contract and provide the address of the contract in the console and also in the "contractAddress.js" file in the metadata folder.
@@ -35,7 +35,7 @@ The script will deploy the contract and provide the address of the contract in t
 Run the following command to batch mint NFTs using the deployed ERC721 contract:
 
 ``` shell
-npx hardhat run scripts/batchMint.js --network goerli
+yarn hardhat run scripts/batchMint.js --network goerli
 ```
 
 The script will mint the specified number of NFTs and assign them to your address.
